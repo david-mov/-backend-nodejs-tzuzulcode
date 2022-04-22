@@ -1,3 +1,17 @@
-const {env, port} = require("./config")
+const {env, port} = require('./config')
+const http = require('http')
 
-console.log(`Running in ${env} enviorement and port ${port}`)
+const server = http.createServer()
+
+server.on('request', (request, response) => {
+
+    if (request.method === 'POST' && request.url === '/datos') {
+        // To do: Come back after learn streams
+    }
+
+    response.statusCode = '200'
+
+    response.end('Hello World!')
+})
+
+console.log(`Server working in ${env} mode at http://localhost:${port}`)
