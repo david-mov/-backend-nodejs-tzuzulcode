@@ -18,10 +18,10 @@ app.post('/', (req, res) => {
 
 app.put('/:id', (req, res) => {
     const {params:{id}, body} = req
-    console.log(id, body)
     if (!users[id]) return res.status(400).json('Error: provided id is non-existent')
     const {enabled} = users[id]
-    users[id] = {...users[id], body, id: id, enabled: enabled}
+    if (!enabled) return res.status(401).json('Error: user is disabled')
+    users[id] = {...users[id], ...body, id, enabled}
     return res.status(201).json(users[id])
 })
 
