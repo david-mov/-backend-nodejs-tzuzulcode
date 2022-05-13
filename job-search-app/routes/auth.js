@@ -24,7 +24,7 @@ function auth(app) {
 	})
 
 	router.post('/signout', isAuthenticated, (req,res) => {
-		return res.clearCookie('token').json({
+		return res.clearCookie('token', {path:'/'}).json({
 			logged: false,
 			info: 'Signed out correctly'
 		})

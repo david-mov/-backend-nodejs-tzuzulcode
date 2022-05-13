@@ -45,14 +45,15 @@ class Auth {
 			const token = this.#createToken(data)
 			return {
 				logged: true,
-				data
+				data,
+				token,
 			}
 	}
 
 	#createToken(userData) {
 		try {
-			const token = jwt.sign(JSON.stringify(userData), privateKey, {
-				expiresIn: '7d'
+			const token = jwt.sign({userData}, privateKey, {
+				expiresIn: 60 * 60 * 24 * 7
 			})
 			return token
         } catch(err) {
