@@ -1,5 +1,6 @@
 const {Router} = require('express')
 const UsersService = require('../services/users')
+const {isAuthenticated, verifyPermission} = require('../middlewares/authValidation')
 
 function users(app) {
 
@@ -8,13 +9,13 @@ function users(app) {
     const router = Router()
     app.use('/api/users', router)
 
-    router.get('/', async (req, res) => {
+    router.get('/', isAuthenticated, verifyPermission(3), async (req, res) => {
         const users = await usersService.getAll()
         const status = typeof users === 'object' && users.error ? 400 : 200
         return res.status(status).json(users)
     })
 
-    router.get('/:email', async (req, res) => {
+    router.get('/:email', isAuthenticated, verifyPermission(1), async (req, res) => {
         const user = await usersService.getByEmail(req.params.email)
         const status = user && user.error ? 400 : 200
         return res.status(status).json(user)
@@ -26,13 +27,13 @@ function users(app) {
         return res.status(status).json(user)
     })
 
-    router.put('/:id', async (req, res) => {
+    router.put('/:id', isAuthenticated, verifyPermission(1), async (req, res) => {
         const user = await usersService.update(req.params.id, req.body)
         const status = user && user.error ? 400 : 200
         return res.status(status).json(user)
     })
 
-    router.delete('/:id', async (req, res) => {
+    router.delete('/:id', isAuthenticated, verifyPermission(1), async (req, res) => {
         const user = await usersService.delete(req.params.id)
         const status = user && user.error ? 400 : 200
         return res.status(status).json(user)

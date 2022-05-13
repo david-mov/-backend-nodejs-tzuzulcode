@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken')
 const {privateKey} = require('../config')
 
-function authValidation(req,res,next) {
+const isAuthenticated = (req,res,next) => {
 	const bearer = req.headers.authorization
 
-	if (!bearer) return res.status(400).json({
+	if (!bearer) return res.status(401).json({
 		error: true,
 		info: 'Insufficient permissions'
 	})
@@ -12,6 +12,7 @@ function authValidation(req,res,next) {
 	try {
 		const token = bearer.startsWith('Bearer ') ? bearer.slice(6) : ''
 		const decoded = jwt.verify(token, privateKey)
+
 		req.user = decoded
 
 		return next()
@@ -21,7 +22,33 @@ function authValidation(req,res,next) {
 			error: true,
 			info: err
 		}
+	}		
+}
+
+const isUnauthenticated = (req,res,next) => {
+	if (!req.headers.authorization) {
+		next()
+	} else {
+		res.status(401).json({
+			message: 'You are already logged',
+			response: false,
+		})
 	}
 }
 
-module.exports = authValidation
+const verifyPermission = (levelRequired) => {
+	return ((req,res,next) => {
+		if (req.user.permissionLevel >= levelRequired) return next()
+		else return res.status(401).json({
+			error: true,
+			info: 'Insufficient permissions'
+		})
+	})
+}
+
+
+module.exports = {
+	isAuthenticated,
+	isUnauthenticated,
+	verifyPermission
+}
