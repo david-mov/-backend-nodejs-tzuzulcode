@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const {privateKey} = require('../config')
 
 const isAuthenticated = (req,res,next) => {
-	const bearer = req.headers.authorization
+	const bearer = req.headers.cookie
 
 	if (!bearer) return res.status(401).json({
 		error: true,
@@ -10,7 +10,7 @@ const isAuthenticated = (req,res,next) => {
 	})
 
 	try {
-		const token = bearer.startsWith('Bearer ') ? bearer.slice(6) : ''
+		const token = bearer.startsWith('token=') ? bearer.slice(6) : ''
 		const decoded = jwt.verify(token, privateKey)
 
 		req.user = decoded
@@ -26,7 +26,7 @@ const isAuthenticated = (req,res,next) => {
 }
 
 const isUnauthenticated = (req,res,next) => {
-	if (!req.headers.authorization) {
+	if (!req.headers.cookie) {
 		next()
 	} else {
 		res.status(401).json({
