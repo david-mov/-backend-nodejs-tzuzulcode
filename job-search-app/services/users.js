@@ -1,30 +1,70 @@
-const {User} = require('../models')
+const {UserModel} = require('../models')
 
 class UsersService {
 
     async getAll() {
-        const users = await User.find({})
-        return users
+        try {
+            const users = await UserModel.find({})
+            return users
+        } catch(err) {
+            console.log(err)
+            return ({
+                error: true,
+                info: err
+            })
+        }
     }
 
     async getByEmail(email) {
-        const user = await User.findOne({email}).exec()
-        return user
+        try {
+            const user = await UserModel.findOne({email}).exec()
+            return user
+        } catch(err) {
+            console.log(err)
+            return ({
+                error: true,
+                info: err
+            })
+        }
     }
 
     async create(userData) {
-        const user = await User.create(userData)
-        return user
+        try {
+            const user = await UserModel.create(userData)
+            return user
+        } catch(err) {
+            console.log(err)
+            return ({
+                error: true,
+                info: err
+            })
+        }
     }
 
     async update(id, userData) {
-        const user = await User.findByIdAndUpdate(id, userData)
-        return user
+        try {
+            const user = await UserModel.findByIdAndUpdate(id, userData)
+            return user
+        } catch(err) {
+            console.log(err)
+            return ({
+                error: true,
+                info: err
+            })
+        }
     }
 
     async delete(id) {
-        const user = await User.findByIdAndDelete(id)
-        return user
+        try {
+            const user = await UserModel.findByIdAndDelete(id)
+            return user
+        } catch(err) {
+            console.log(err)
+            return ({
+                error: true,
+                info: err
+            })
+        }
     }
 
 }

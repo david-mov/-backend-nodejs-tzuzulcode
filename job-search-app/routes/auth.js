@@ -10,16 +10,16 @@ function auth(app) {
 
 	router.post('/signin', async (req, res) => {
 		const user = await authServices.signIn(req.body)
-		if (!user.logged) return res.json(user)
+		const status = user.logged ? 200 : 400
 		const cookie = setCookie('token',user.token, 7)
-		return res.cookie(...cookie).json(user)
+		return res.status(status).cookie(...cookie).json(user)
 	})
 
 	router.post('/signup', async (req, res) => {
 		const user = await authServices.signUp(req.body)
-		if (!user.logged) return res.json(user)
+		const status = user.logged ? 200 : 400
 		const cookie = setCookie('token',user.token, 7)
-		return res.cookie(...cookie).json(user)
+		return res.status(status).cookie(...cookie).json(user)
 	})
 }
 

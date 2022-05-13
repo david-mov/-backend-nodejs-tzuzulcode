@@ -10,27 +10,32 @@ function users(app) {
 
     router.get('/', async (req, res) => {
         const users = await usersService.getAll()
-        return res.json(users)
+        const status = typeof users === 'object' && users.error ? 400 : 200
+        return res.status(status).json(users)
     })
 
     router.get('/:email', async (req, res) => {
         const user = await usersService.getByEmail(req.params.email)
-        return res.json(user)
+        const status = user && user.error ? 400 : 200
+        return res.status(status).json(user)
     })
 
     router.post('/', async (req, res) => {
         const user = await usersService.create(req.body)
-        return res.json(user)
+        const status = user && user.error ? 400 : 200
+        return res.status(status).json(user)
     })
 
     router.put('/:id', async (req, res) => {
         const user = await usersService.update(req.params.id, req.body)
-        return res.json(user)
+        const status = user && user.error ? 400 : 200
+        return res.status(status).json(user)
     })
 
     router.delete('/:id', async (req, res) => {
         const user = await usersService.delete(req.params.id)
-        return res.json(user)
+        const status = user && user.error ? 400 : 200
+        return res.status(status).json(user)
     })
 }
 
