@@ -28,9 +28,9 @@ class JobsService {
         }
     }
 
-    async create(jobData) {
+    async create(jobData, owner) {
         try {
-            const job = await JobModel.create(jobData)
+            const job = await JobModel.create({...jobData, owner})
             return job
         } catch(err) {
             console.log(err)
@@ -58,6 +58,28 @@ class JobsService {
         try {
             const job = await JobModel.findByIdAndDelete(id)
             return job
+        } catch(err) {
+            console.log(err)
+            return ({
+                error: true,
+                info: err
+            })
+        }
+    }
+
+    async apply(jobId, applicantId) {
+        try {
+            const job = await JobModel.findById(jobId)
+            
+            if (!job.applicants.includes(applicantId)) {
+                job.applicants.push(applicantId)
+                await job.save()
+                return job.applicants  
+            }
+            return ({
+                error:true,
+                info: 'User has already applied for this job'
+            })
         } catch(err) {
             console.log(err)
             return ({

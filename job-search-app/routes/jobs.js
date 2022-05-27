@@ -22,7 +22,7 @@ function jobs(app) {
     })
 
     router.post('/', isAuthenticated, verifyPermission(2), async (req, res) => {
-        const job = await jobsService.create(req.body)
+        const job = await jobsService.create(req.body, req.user.data.id)
         const status = job && job.error ? 400 : 200
         return res.status(status).json(job)
     })
@@ -35,6 +35,12 @@ function jobs(app) {
 
     router.delete('/:id', isAuthenticated, verifyPermission(2), async (req, res) => {
         const job = await jobsService.delete(req.params.id)
+        const status = job && job.error ? 400 : 200
+        return res.status(status).json(job)
+    })
+
+    router.put('/apply/:jobId', isAuthenticated, verifyPermission(1), async (req, res) => {
+        const job = await jobsService.apply(req.params.jobId, req.user.data.id)
         const status = job && job.error ? 400 : 200
         return res.status(status).json(job)
     })

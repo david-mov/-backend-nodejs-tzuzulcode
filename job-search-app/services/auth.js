@@ -50,9 +50,9 @@ class Auth {
 			}
 	}
 
-	#createToken(userData) {
+	#createToken(data) {
 		try {
-			const token = jwt.sign({userData}, privateKey, {
+			const token = jwt.sign({data}, privateKey, {
 				expiresIn: 60 * 60 * 24 * 7
 			})
 			return token
