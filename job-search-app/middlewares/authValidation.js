@@ -38,10 +38,10 @@ const isUnauthenticated = (req,res,next) => {
 
 const verifyPermission = (levelRequired) => {
 	return ((req,res,next) => {
-		if (req.user.permissionLevel >= levelRequired) return next()
+		if (req.user.data.permissionLevel >= levelRequired) return next()
 		else return res.status(401).json({
 			error: true,
-			info: 'Insufficient permissions'
+			info: 'Insufficient permissions',
 		})
 	})
 }
